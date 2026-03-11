@@ -20,15 +20,15 @@ export default function HeroSection() {
         transition={{ duration: 1.1, ease: 'easeOut' }}
         className="section-shell relative z-10 text-center"
       >
-        <p className="section-label">Cinematic Creator Portfolio</p>
+        <p className="section-label">Ramzi ZRT • Creator World</p>
         <h1 className="heading-font text-7xl leading-[0.9] sm:text-8xl md:text-9xl">RAMZI ZRT</h1>
 
         <p className="mt-6 text-sm uppercase tracking-[0.3em] text-[#BFBFBF] md:text-base">
-          Photographer • Graphic Designer • Video Editor
+          Street Challenges • Boxing • Cinematic Storytelling
         </p>
 
         <p className="mx-auto mt-6 max-w-2xl text-sm leading-relaxed text-[#BFBFBF] md:text-base">
-          Creating cinematic visual stories for YouTube and social media.
+          Welcome to my creator world: raw moments, hard training, and stories filmed like short movies.
         </p>
 
         <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
