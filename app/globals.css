@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Anton&family=Bebas+Neue&family=Inter:wght@300;400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@300;400;500;600;700;800&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -13,51 +13,66 @@ html {
 }
 
 body {
-  @apply bg-black text-white antialiased;
+  margin: 0;
+  min-height: 100vh;
+  background: radial-gradient(circle at top, #111111 0%, #000000 55%);
+  color: #ffffff;
   font-family: 'Inter', sans-serif;
-  background-image: radial-gradient(circle at 15% 20%, rgba(255, 255, 255, 0.05), transparent 30%),
-    radial-gradient(circle at 85% 0%, rgba(255, 255, 255, 0.04), transparent 35%);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.12;
+  z-index: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160' viewBox='0 0 160 160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+  animation: grainShift 8s steps(10) infinite;
+}
+
+@keyframes grainShift {
+  0% { transform: translate(0, 0); }
+  20% { transform: translate(-2%, 1%); }
+  40% { transform: translate(2%, -1%); }
+  60% { transform: translate(-1%, 2%); }
+  80% { transform: translate(1%, -2%); }
+  100% { transform: translate(0, 0); }
 }
 
 .heading-font {
-  font-family: 'Bebas Neue', 'Anton', sans-serif;
-  letter-spacing: 0.08em;
+  font-family: 'Anton', sans-serif;
+  letter-spacing: 0.04em;
 }
 
-.section-shell {
-  @apply mx-auto w-full max-w-7xl px-6 md:px-10;
+.glass-card {
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 18px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
 }
 
-.section-spacing {
-  @apply py-20 md:py-24;
+.soft-glow {
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.12),
+    0 8px 24px rgba(0, 0, 0, 0.45),
+    0 0 28px rgba(255, 255, 255, 0.12);
 }
 
-.section-label {
-  @apply mb-3 text-xs uppercase tracking-[0.28em] text-[#BFBFBF];
+@keyframes ringPulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.2); }
+  50% { box-shadow: 0 0 0 10px rgba(255, 255, 255, 0.02); }
 }
 
-.cinematic-overlay {
-  background: linear-gradient(
-    to bottom,
-    rgba(0, 0, 0, 0.92) 0%,
-    rgba(0, 0, 0, 0.55) 40%,
-    rgba(0, 0, 0, 0.88) 100%
-  );
+@keyframes drift {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-6px); }
 }
 
-.grid-masonry {
-  column-count: 1;
-  column-gap: 1rem;
-}
-
-@media (min-width: 768px) {
-  .grid-masonry {
-    column-count: 2;
-  }
-}
-
-@media (min-width: 1200px) {
-  .grid-masonry {
-    column-count: 3;
-  }
+.floating {
+  animation: drift 6s ease-in-out infinite;
 }
