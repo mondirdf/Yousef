@@ -8,7 +8,8 @@ type YouTubePayload = {
   channelUrl: string;
 };
 
-const CHANNEL_URL = 'https://youtube.com/@ramzizrt';
+const CHANNEL_ID = 'UCKz8ISvm1sH1iNyo2DPzQoA';
+const CHANNEL_URL = `https://www.youtube.com/channel/${CHANNEL_ID}`;
 
 const FALLBACK: YouTubePayload = {
   subscriberCount: '--',
@@ -68,9 +69,9 @@ async function scrapeSubscriberCount() {
 
 export async function GET() {
   const apiKey = process.env.YOUTUBE_API_KEY;
-  const channelId = process.env.YOUTUBE_CHANNEL_ID;
+  const channelId = process.env.YOUTUBE_CHANNEL_ID || CHANNEL_ID;
 
-  if (!apiKey || !channelId) {
+  if (!apiKey) {
     try {
       const realSubscriberCount = await scrapeSubscriberCount();
 
