@@ -35,21 +35,21 @@ const socialLinks: SocialLink[] = [
   { label: 'Email', href: 'mailto:ramzizaratpro@gmail.com', icon: 'email' }
 ];
 
-const featuredContent = [
+const whatIDoContent = [
   {
-    title: 'Street Challenges',
-    image:
-      'https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?auto=format&fit=crop&w=1200&q=80'
+    icon: '🎥',
+    title: 'YouTube Content',
+    description: 'Entertaining videos, challenges and real-life stories.'
   },
   {
-    title: 'Boxing Training',
-    image:
-      'https://images.unsplash.com/photo-1549719386-74dfcbf7dbed?auto=format&fit=crop&w=1200&q=80'
+    icon: '📸',
+    title: 'Photography',
+    description: 'Capturing cinematic moments and visual storytelling.'
   },
   {
-    title: 'Creative Videos',
-    image:
-      'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&w=1200&q=80'
+    icon: '🎬',
+    title: 'Video Editing',
+    description: 'Creative edits and storytelling for social media.'
   }
 ];
 
@@ -242,18 +242,27 @@ export default function Home() {
         viewport={{ once: true, amount: 0.2 }}
         transition={{ duration: 0.55 }}
       >
-        <h2 className="heading-font mb-4 text-3xl uppercase">Featured Content</h2>
+        <h2 className="heading-font mb-4 text-3xl uppercase">WHAT I DO</h2>
         <div className="flex flex-col gap-4">
-          {featuredContent.map((item) => (
+          {whatIDoContent.map((item) => (
             <motion.article
               key={item.title}
-              whileHover={{ scale: 1.02, y: -3 }}
-              className="glass-card group relative overflow-hidden"
+              whileHover={{
+                scale: 1.03,
+                boxShadow:
+                  '0 0 0 1px rgba(255,255,255,0.2), 0 18px 38px rgba(0,0,0,0.55), 0 0 30px rgba(255,255,255,0.2)'
+              }}
+              transition={{ duration: 0.25, ease: 'easeOut' }}
+              className="glass-card group relative overflow-hidden p-5"
             >
-              <img src={item.image} alt={item.title} className="h-40 w-full object-cover" />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/35 to-black/10" />
-              <div className="absolute inset-0 opacity-0 transition duration-500 group-hover:opacity-100 bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.25),transparent_55%)]" />
-              <p className="heading-font absolute bottom-3 left-4 text-[1.7rem] uppercase text-white">{item.title}</p>
+              <div className="absolute inset-0 opacity-0 transition duration-500 group-hover:opacity-100 bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.2),transparent_55%)]" />
+              <div className="relative z-10">
+                <div className="text-3xl" aria-hidden="true">
+                  {item.icon}
+                </div>
+                <h3 className="heading-font mt-4 text-2xl uppercase leading-none">{item.title}</h3>
+                <p className="mt-3 text-sm leading-relaxed text-[#C9C9C9]">{item.description}</p>
+              </div>
             </motion.article>
           ))}
         </div>
