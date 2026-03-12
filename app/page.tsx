@@ -19,7 +19,7 @@ type SocialLink = {
 };
 
 const defaultData: YouTubeData = {
-  subscriberCount: '--',
+  subscriberCount: '39.7 k',
   latestVideoId: 'DWcJFNfaw9c',
   latestVideoTitle: 'Latest upload from Ramzi ZRT',
   latestVideoThumbnail: 'https://i.ytimg.com/vi/DWcJFNfaw9c/maxresdefault.jpg',
@@ -112,7 +112,7 @@ export default function Home() {
         const response = await fetch('/api/youtube');
         if (!response.ok) return;
         const payload = (await response.json()) as YouTubeData;
-        setYoutubeData(payload);
+        setYoutubeData({ ...payload, subscriberCount: '39.7 k' });
       } catch {
         // fallback remains visible
       }
@@ -283,11 +283,23 @@ export default function Home() {
           rel="noreferrer"
           whileHover={{ scale: 1.04 }}
           whileTap={{ scale: 0.98 }}
-          className="mt-6 inline-flex h-[56px] items-center justify-center rounded-2xl border border-white/35 bg-white/10 px-8 text-sm font-semibold uppercase tracking-[0.12em]"
+          className="mt-6 inline-flex h-[56px] items-center justify-center rounded-2xl border border-red-400/70 bg-red-600 px-8 text-sm font-semibold uppercase tracking-[0.12em] text-white shadow-[0_10px_30px_rgba(220,38,38,0.45)]"
         >
           Subscribe
         </motion.a>
       </motion.section>
+
+      <footer className="pb-2 pt-8 text-center text-xs text-[#BFBFBF]">
+        made by{' '}
+        <a
+          href="https://df-code.vercel.app/"
+          target="_blank"
+          rel="noreferrer"
+          className="font-semibold text-white underline decoration-red-400/80 underline-offset-4"
+        >
+          df
+        </a>
+      </footer>
     </main>
   );
 }
