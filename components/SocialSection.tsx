@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 import { Instagram, Music2, Youtube } from 'lucide-react';
 
 const links = [
-  { name: 'YouTube', icon: Youtube, href: 'https://youtube.com/@ramzizrt' },
+  { name: 'YouTube', icon: Youtube, href: 'https://www.youtube.com/channel/UCKz8ISvm1sH1iNyo2DPzQoA' },
   { name: 'Instagram', icon: Instagram, href: 'https://instagram.com/ramzizrt' },
   { name: 'TikTok', icon: Music2, href: 'https://tiktok.com/@ramzizrt' }
 ];
