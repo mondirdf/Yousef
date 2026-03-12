@@ -3,7 +3,6 @@
 import { Instagram, Mail, Youtube } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useEffect, useMemo, useState } from 'react';
-import Image from 'next/image';
 
 type YouTubeData = {
   subscriberCount: string;
@@ -168,13 +167,11 @@ export default function Home() {
           transition={{ duration: 0.6 }}
         >
           <div className="mx-auto h-[118px] w-[118px] rounded-full border border-white/20 p-[6px] [animation:ringPulse_3s_ease-in-out_infinite]">
-            <div className="relative h-full w-full rounded-full border border-white/15 p-[4px] shadow-[0_0_28px_rgba(255,255,255,0.2)]">
-              <Image
+            <div className="h-full w-full rounded-full border border-white/15 p-[4px] shadow-[0_0_28px_rgba(255,255,255,0.2)]">
+              <img
                 src="/ramzi-logo.svg"
                 alt="Ramzi ZRT profile"
-                fill
-                sizes="108px"
-                className="rounded-full object-cover"
+                className="h-full w-full rounded-full object-cover"
               />
             </div>
           </div>
@@ -231,15 +228,7 @@ export default function Home() {
               whileHover={{ y: -4, scale: 1.01 }}
               className="glass-card soft-glow block overflow-hidden"
             >
-              <div className="relative aspect-video w-full">
-                <Image
-                  src={youtubeData.latestVideoThumbnail}
-                  alt={youtubeData.latestVideoTitle}
-                  fill
-                  sizes="(min-width: 1024px) 520px, (min-width: 768px) 80vw, 100vw"
-                  className="object-cover"
-                />
-              </div>
+              <img src={youtubeData.latestVideoThumbnail} alt={youtubeData.latestVideoTitle} className="w-full" />
               <div className="border-t border-white/15 p-4">
                 <p className="text-sm text-[#BFBFBF]">{youtubeData.latestVideoTitle}</p>
               </div>
