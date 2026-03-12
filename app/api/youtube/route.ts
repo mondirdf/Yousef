@@ -60,6 +60,11 @@ function extractTextFromSubscriberObject(value: unknown): string | null {
     simpleText?: unknown;
     label?: unknown;
     runs?: Array<{ text?: unknown }>;
+    accessibility?: {
+      accessibilityData?: {
+        label?: unknown;
+      };
+    };
   };
 
   if (typeof textNode.simpleText === 'string' && textNode.simpleText.trim()) {
@@ -68,6 +73,11 @@ function extractTextFromSubscriberObject(value: unknown): string | null {
 
   if (typeof textNode.label === 'string' && textNode.label.trim()) {
     return textNode.label;
+  }
+
+  const accessibilityLabel = textNode.accessibility?.accessibilityData?.label;
+  if (typeof accessibilityLabel === 'string' && accessibilityLabel.trim()) {
+    return accessibilityLabel;
   }
 
   const runsText = textNode.runs
@@ -151,7 +161,8 @@ async function scrapeSubscriberCount() {
   const patterns = [
     /"subscriberCountText"\s*:\s*\{\s*"simpleText"\s*:\s*"([^"]+)"/,
     /"subscriberCountText"\s*:\s*\{[^{}]*"label"\s*:\s*"([^"]+)"/,
-    /"subscriberCountText"\s*:\s*\{\s*"runs"\s*:\s*\[\{\s*"text"\s*:\s*"([^"]+)"/
+    /"subscriberCountText"\s*:\s*\{\s*"runs"\s*:\s*\[\{\s*"text"\s*:\s*"([^"]+)"/,
+    /"subscriberCountText"\s*:\s*\{[\s\S]*?"accessibilityData"\s*:\s*\{\s*"label"\s*:\s*"([^"]+)"/
   ];
 
   for (const pattern of patterns) {
