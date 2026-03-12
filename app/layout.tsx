@@ -4,7 +4,12 @@ import './globals.css';
 export const metadata: Metadata = {
   title: 'Ramzi ZRT | Creator Links',
   description:
-    'Premium link-in-bio page for Ramzi ZRT with social links, latest YouTube video, featured content, and subscribe call-to-action.'
+    'Premium link-in-bio page for Ramzi ZRT with social links, latest YouTube video, featured content, and subscribe call-to-action.',
+  icons: {
+    icon: '/ramzi-logo.svg',
+    shortcut: '/ramzi-logo.svg',
+    apple: '/ramzi-logo.svg'
+  }
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
