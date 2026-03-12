@@ -231,11 +231,12 @@ export default function Home() {
               whileHover={{ y: -4, scale: 1.01 }}
               className="glass-card soft-glow block overflow-hidden"
             >
-              <div className="relative aspect-video w-full">
+              <div className="relative w-full aspect-video overflow-hidden rounded-xl">
                 <Image
                   src={youtubeData.latestVideoThumbnail}
                   alt={youtubeData.latestVideoTitle}
                   fill
+                  unoptimized
                   sizes="(min-width: 1024px) 520px, (min-width: 768px) 80vw, 100vw"
                   className="object-cover"
                 />
