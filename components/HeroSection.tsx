@@ -23,9 +23,11 @@ export default function HeroSection() {
         <p className="section-label">Ramzi ZRT • Creator World</p>
         <h1 className="heading-font text-7xl leading-[0.9] sm:text-8xl md:text-9xl">RAMZI ZRT</h1>
 
+        <p className="mt-5 text-sm uppercase tracking-[0.3em] text-[#BFBFBF] md:text-base">Content Creator</p>
+
         <p
           dir="rtl"
-          className="arabic-slogan mx-auto mb-[10px] mt-[8px] max-w-2xl text-2xl leading-relaxed text-[rgba(255,255,255,0.8)] sm:text-3xl md:text-4xl"
+          className="arabic-slogan mx-auto mb-[10px] mt-[8px] max-w-2xl text-xl leading-relaxed text-[rgba(255,255,255,0.8)] sm:text-2xl md:text-3xl"
         >
           الهدف هو نرجع يوتيوب الجزائر أفضل
         </p>
