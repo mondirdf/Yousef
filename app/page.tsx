@@ -129,7 +129,7 @@ export default function Home() {
   }, []);
 
   return (
-    <main className="relative z-10 mx-auto min-h-screen w-full max-w-md overflow-hidden px-5 pb-16 pt-8 sm:px-6">
+    <main className="relative z-10 mx-auto min-h-screen w-full max-w-[1100px] overflow-hidden px-5 pb-16 pt-8 sm:px-6 lg:pt-[60px]">
       <div
         className="pointer-events-none fixed z-0 h-44 w-44 rounded-full bg-white/20 blur-3xl transition-transform duration-300"
         style={{ transform: `translate(${cursor.x - 88}px, ${cursor.y - 88}px)` }}
@@ -158,115 +158,117 @@ export default function Home() {
         }
       `}</style>
 
-      <motion.section
-        className="glass-card floating mb-8 px-6 py-8 text-center"
-        variants={fadeUp}
-        initial="hidden"
-        animate="show"
-        transition={{ duration: 0.6 }}
-      >
-        <div className="mx-auto h-[118px] w-[118px] rounded-full border border-white/20 p-[6px] [animation:ringPulse_3s_ease-in-out_infinite]">
-          <div className="h-full w-full rounded-full border border-white/15 p-[4px] shadow-[0_0_28px_rgba(255,255,255,0.2)]">
-            <img
-              src="/ramzi-logo.svg"
-              alt="Ramzi ZRT profile"
-              className="h-full w-full rounded-full object-cover"
-            />
-          </div>
-        </div>
-        <h1 className="heading-font mt-5 text-5xl uppercase leading-none">RAMZI ZRT</h1>
-        <p className="mt-2 text-sm uppercase tracking-[0.18em] text-[#BFBFBF]">Content Creator</p>
-        <p className="mt-4 text-sm leading-relaxed text-[#BFBFBF]">
-          Creating cinematic YouTube videos, challenges and real-life stories.
-        </p>
-        <div className="mx-auto mt-5 w-fit rounded-full border border-white/20 bg-white/5 px-4 py-2 text-sm shadow-[0_0_20px_rgba(255,255,255,0.1)]">
-          Subscribers: <span className="font-semibold">{youtubeData.subscriberCount}</span>
-        </div>
-      </motion.section>
-
-      <motion.section
-        className="mb-8 flex flex-col gap-3"
-        variants={fadeUp}
-        initial="hidden"
-        whileInView="show"
-        viewport={{ once: true, amount: 0.2 }}
-        transition={{ duration: 0.5 }}
-      >
-        {socialLinks.map((link) => (
-          <motion.a
-            key={link.label}
-            href={link.href}
-            target="_blank"
-            rel="noreferrer"
-            whileHover={{ scale: 1.03, y: -2 }}
-            whileTap={{ scale: 0.99 }}
-            className="glass-card group relative flex h-[60px] items-center justify-center overflow-hidden text-sm font-medium"
-          >
-            <span className="absolute -left-1/2 top-0 h-full w-1/2 -skew-x-12 bg-gradient-to-r from-transparent via-white/25 to-transparent opacity-0 transition duration-700 group-hover:left-[120%] group-hover:opacity-100" />
-            <span className="relative z-10 flex items-center gap-2.5">
-              <PlatformIcon icon={link.icon} />
-              <span>{link.label}</span>
-            </span>
-          </motion.a>
-        ))}
-      </motion.section>
-
-      <motion.section
-        className="mb-8"
-        variants={fadeUp}
-        initial="hidden"
-        whileInView="show"
-        viewport={{ once: true, amount: 0.2 }}
-        transition={{ duration: 0.55 }}
-      >
-        <h2 className="heading-font mb-4 text-3xl uppercase">Latest Video</h2>
-        <motion.a
-          href={`https://www.youtube.com/watch?v=${youtubeData.latestVideoId}`}
-          target="_blank"
-          rel="noreferrer"
-          whileHover={{ y: -4, scale: 1.01 }}
-          className="glass-card soft-glow block overflow-hidden"
+      <div className="flex flex-col gap-8 lg:gap-10">
+        <motion.section
+          className="glass-card floating px-6 py-8 text-center lg:mx-auto lg:w-full lg:max-w-[420px]"
+          variants={fadeUp}
+          initial="hidden"
+          animate="show"
+          transition={{ duration: 0.6 }}
         >
-          <img src={youtubeData.latestVideoThumbnail} alt={youtubeData.latestVideoTitle} className="w-full" />
-          <div className="border-t border-white/15 p-4">
-            <p className="text-sm text-[#BFBFBF]">{youtubeData.latestVideoTitle}</p>
+          <div className="mx-auto h-[118px] w-[118px] rounded-full border border-white/20 p-[6px] [animation:ringPulse_3s_ease-in-out_infinite]">
+            <div className="h-full w-full rounded-full border border-white/15 p-[4px] shadow-[0_0_28px_rgba(255,255,255,0.2)]">
+              <img
+                src="/ramzi-logo.svg"
+                alt="Ramzi ZRT profile"
+                className="h-full w-full rounded-full object-cover"
+              />
+            </div>
           </div>
-        </motion.a>
-      </motion.section>
+          <h1 className="heading-font mt-5 text-5xl uppercase leading-none">RAMZI ZRT</h1>
+          <p className="mt-2 text-sm uppercase tracking-[0.18em] text-[#BFBFBF]">Content Creator</p>
+          <p className="mt-4 text-sm leading-relaxed text-[#BFBFBF]">
+            Creating cinematic YouTube videos, challenges and real-life stories.
+          </p>
+          <div className="mx-auto mt-5 w-fit rounded-full border border-white/20 bg-white/5 px-4 py-2 text-sm shadow-[0_0_20px_rgba(255,255,255,0.1)]">
+            Subscribers: <span className="font-semibold">{youtubeData.subscriberCount}</span>
+          </div>
+        </motion.section>
 
-      <motion.section
-        className="mb-8"
-        variants={fadeUp}
-        initial="hidden"
-        whileInView="show"
-        viewport={{ once: true, amount: 0.2 }}
-        transition={{ duration: 0.55 }}
-      >
-        <h2 className="heading-font mb-4 text-3xl uppercase">WHAT I DO</h2>
-        <div className="flex flex-col gap-4">
-          {whatIDoContent.map((item) => (
-            <motion.article
-              key={item.title}
-              whileHover={{
-                scale: 1.03,
-                boxShadow:
-                  '0 0 0 1px rgba(255,255,255,0.2), 0 18px 38px rgba(0,0,0,0.55), 0 0 30px rgba(255,255,255,0.2)'
-              }}
-              transition={{ duration: 0.25, ease: 'easeOut' }}
-              className="glass-card group relative overflow-hidden p-5"
+        <motion.section
+          className="flex flex-col gap-3 lg:grid lg:grid-cols-2 lg:gap-4"
+          variants={fadeUp}
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true, amount: 0.2 }}
+          transition={{ duration: 0.5 }}
+        >
+          {socialLinks.map((link) => (
+            <motion.a
+              key={link.label}
+              href={link.href}
+              target="_blank"
+              rel="noreferrer"
+              whileHover={{ scale: 1.03, y: -2 }}
+              whileTap={{ scale: 0.99 }}
+              className="glass-card group relative flex h-[60px] items-center justify-center overflow-hidden text-sm font-medium"
             >
-              <div className="absolute inset-0 opacity-0 transition duration-500 group-hover:opacity-100 bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.2),transparent_55%)]" />
-              <div className="relative z-10">
-                <div className="text-3xl" aria-hidden="true">
-                  {item.icon}
-                </div>
-                <h3 className="heading-font mt-4 text-2xl uppercase leading-none">{item.title}</h3>
-                <p className="mt-3 text-sm leading-relaxed text-[#C9C9C9]">{item.description}</p>
-              </div>
-            </motion.article>
+              <span className="absolute -left-1/2 top-0 h-full w-1/2 -skew-x-12 bg-gradient-to-r from-transparent via-white/25 to-transparent opacity-0 transition duration-700 group-hover:left-[120%] group-hover:opacity-100" />
+              <span className="relative z-10 flex items-center gap-2.5">
+                <PlatformIcon icon={link.icon} />
+                <span>{link.label}</span>
+              </span>
+            </motion.a>
           ))}
+        </motion.section>
+
+        <div className="grid gap-8 lg:grid-cols-2">
+          <motion.section
+            variants={fadeUp}
+            initial="hidden"
+            whileInView="show"
+            viewport={{ once: true, amount: 0.2 }}
+            transition={{ duration: 0.55 }}
+          >
+            <h2 className="heading-font mb-4 text-3xl uppercase">Latest Video</h2>
+            <motion.a
+              href={`https://www.youtube.com/watch?v=${youtubeData.latestVideoId}`}
+              target="_blank"
+              rel="noreferrer"
+              whileHover={{ y: -4, scale: 1.01 }}
+              className="glass-card soft-glow block overflow-hidden"
+            >
+              <img src={youtubeData.latestVideoThumbnail} alt={youtubeData.latestVideoTitle} className="w-full" />
+              <div className="border-t border-white/15 p-4">
+                <p className="text-sm text-[#BFBFBF]">{youtubeData.latestVideoTitle}</p>
+              </div>
+            </motion.a>
+          </motion.section>
+
+          <motion.section
+            variants={fadeUp}
+            initial="hidden"
+            whileInView="show"
+            viewport={{ once: true, amount: 0.2 }}
+            transition={{ duration: 0.55 }}
+          >
+            <h2 className="heading-font mb-4 text-3xl uppercase">WHAT I DO</h2>
+            <div className="flex flex-col gap-4 lg:grid lg:grid-cols-3 lg:gap-6">
+              {whatIDoContent.map((item) => (
+                <motion.article
+                  key={item.title}
+                  whileHover={{
+                    scale: 1.03,
+                    boxShadow:
+                      '0 0 0 1px rgba(255,255,255,0.2), 0 18px 38px rgba(0,0,0,0.55), 0 0 30px rgba(255,255,255,0.2)'
+                  }}
+                  transition={{ duration: 0.25, ease: 'easeOut' }}
+                  className="glass-card group relative overflow-hidden p-5"
+                >
+                  <div className="absolute inset-0 opacity-0 transition duration-500 group-hover:opacity-100 bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.2),transparent_55%)]" />
+                  <div className="relative z-10">
+                    <div className="text-3xl" aria-hidden="true">
+                      {item.icon}
+                    </div>
+                    <h3 className="heading-font mt-4 text-2xl uppercase leading-none">{item.title}</h3>
+                    <p className="mt-3 text-sm leading-relaxed text-[#C9C9C9]">{item.description}</p>
+                  </div>
+                </motion.article>
+              ))}
+            </div>
+          </motion.section>
         </div>
-      </motion.section>
+      </div>
 
       <motion.section
         className="glass-card soft-glow px-6 py-10 text-center"
