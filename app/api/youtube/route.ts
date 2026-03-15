@@ -21,6 +21,18 @@ const FALLBACK: YouTubeResponse = {
   }
 };
 
+async function fetchJson<T>(url: string): Promise<T | null> {
+  const response = await fetch(url, {
+    next: { revalidate: 3600 }
+  });
+
+  if (!response.ok) {
+    return null;
+  }
+
+  return (await response.json()) as T;
+}
+
 function formatSubscriberCount(rawCount: string | undefined): string {
   const count = Number(rawCount);
 
@@ -47,25 +59,26 @@ function formatSubscriberCount(rawCount: string | undefined): string {
 }
 
 async function fetchChannelId(apiKey: string): Promise<string | null> {
-  const channelParams = new URLSearchParams({
-    part: 'id',
-    forHandle: CHANNEL_HANDLE,
-    key: apiKey
-  });
+  const handleCandidates = [CHANNEL_HANDLE, `@${CHANNEL_HANDLE}`];
 
-  const response = await fetch(`https://www.googleapis.com/youtube/v3/channels?${channelParams.toString()}`, {
-    next: { revalidate: 3600 }
-  });
+  for (const handle of handleCandidates) {
+    const channelParams = new URLSearchParams({
+      part: 'id',
+      forHandle: handle,
+      key: apiKey
+    });
 
-  if (!response.ok) {
-    return null;
+    const data = await fetchJson<{
+      items?: Array<{ id?: string }>;
+    }>(`https://www.googleapis.com/youtube/v3/channels?${channelParams.toString()}`);
+
+    const channelId = data?.items?.[0]?.id;
+    if (channelId) {
+      return channelId;
+    }
   }
 
-  const data = (await response.json()) as {
-    items?: Array<{ id?: string }>;
-  };
-
-  return data.items?.[0]?.id || null;
+  return null;
 }
 
 async function fetchLatestVideo(apiKey: string): Promise<LatestVideo> {
@@ -75,67 +88,81 @@ async function fetchLatestVideo(apiKey: string): Promise<LatestVideo> {
     return FALLBACK.latestVideo;
   }
 
-  const searchParams = new URLSearchParams({
-    part: 'snippet',
-    type: 'video',
-    order: 'date',
-    maxResults: '1',
-    channelId,
+  const channelParams = new URLSearchParams({
+    part: 'contentDetails',
+    id: channelId,
     key: apiKey
   });
 
-  const response = await fetch(`https://www.googleapis.com/youtube/v3/search?${searchParams.toString()}`, {
-    next: { revalidate: 3600 }
-  });
+  const channelData = await fetchJson<{
+    items?: Array<{
+      contentDetails?: {
+        relatedPlaylists?: {
+          uploads?: string;
+        };
+      };
+    }>;
+  }>(`https://www.googleapis.com/youtube/v3/channels?${channelParams.toString()}`);
 
-  if (!response.ok) {
+  const uploadsPlaylistId = channelData?.items?.[0]?.contentDetails?.relatedPlaylists?.uploads;
+
+  if (!uploadsPlaylistId) {
     return FALLBACK.latestVideo;
   }
 
-  const data = (await response.json()) as {
+  const playlistParams = new URLSearchParams({
+    part: 'snippet',
+    playlistId: uploadsPlaylistId,
+    maxResults: '1',
+    key: apiKey
+  });
+
+  const data = await fetchJson<{
     items?: Array<{
-      id?: { videoId?: string };
       snippet?: {
         title?: string;
+        resourceId?: { videoId?: string };
         thumbnails?: { high?: { url?: string } };
       };
     }>;
-  };
+  }>(`https://www.googleapis.com/youtube/v3/playlistItems?${playlistParams.toString()}`);
 
-  const item = data.items?.[0];
-  const videoId = item?.id?.videoId;
+  if (!data?.items?.length) {
+    return FALLBACK.latestVideo;
+  }
+
+  const item = data.items[0];
+  const videoId = item?.snippet?.resourceId?.videoId;
 
   if (!videoId) {
     return FALLBACK.latestVideo;
   }
 
   return {
-    title: item?.snippet?.title || FALLBACK.latestVideo.title,
-    thumbnail: item?.snippet?.thumbnails?.high?.url || FALLBACK.latestVideo.thumbnail,
+    title: item.snippet?.title || FALLBACK.latestVideo.title,
+    thumbnail: item.snippet?.thumbnails?.high?.url || FALLBACK.latestVideo.thumbnail,
     url: `https://youtube.com/watch?v=${videoId}`
   };
 }
 
 async function fetchSubscriberCount(apiKey: string): Promise<string> {
-  const channelParams = new URLSearchParams({
-    part: 'statistics',
-    forHandle: CHANNEL_HANDLE,
-    key: apiKey
-  });
+  const channelId = await fetchChannelId(apiKey);
 
-  const response = await fetch(`https://www.googleapis.com/youtube/v3/channels?${channelParams.toString()}`, {
-    next: { revalidate: 3600 }
-  });
-
-  if (!response.ok) {
+  if (!channelId) {
     return FALLBACK.subscriberCount;
   }
 
-  const data = (await response.json()) as {
-    items?: Array<{ statistics?: { subscriberCount?: string } }>;
-  };
+  const channelParams = new URLSearchParams({
+    part: 'statistics',
+    id: channelId,
+    key: apiKey
+  });
 
-  return formatSubscriberCount(data.items?.[0]?.statistics?.subscriberCount);
+  const data = await fetchJson<{
+    items?: Array<{ statistics?: { subscriberCount?: string } }>;
+  }>(`https://www.googleapis.com/youtube/v3/channels?${channelParams.toString()}`);
+
+  return formatSubscriberCount(data?.items?.[0]?.statistics?.subscriberCount);
 }
 
 export async function GET() {
