@@ -15,6 +15,7 @@ type YouTubeData = {
 };
 
 type YouTubeApiPayload = {
+  subscribers: string;
   latestVideoId: string;
   latestVideoThumbnail: string;
   latestVideoUrl: string;
@@ -28,7 +29,7 @@ type SocialLink = {
 };
 
 const defaultData: YouTubeData = {
-  subscriberCount: '--',
+  subscriberCount: '39.6K',
   latestVideo: {
     title: 'Latest upload from Ramzi ZRT',
     thumbnail: 'https://i.ytimg.com/vi/DWcJFNfaw9c/hqdefault.jpg',
@@ -125,6 +126,7 @@ export default function Home() {
         const payload = (await response.json()) as YouTubeApiPayload;
         setYoutubeData((current) => ({
           ...current,
+          subscriberCount: payload.subscribers?.trim() || defaultData.subscriberCount,
           latestVideo: {
             title: payload.latestVideoTitle?.trim() || defaultData.latestVideo.title,
             thumbnail: payload.latestVideoThumbnail?.trim() || defaultData.latestVideo.thumbnail,
