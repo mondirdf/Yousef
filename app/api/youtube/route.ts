@@ -12,7 +12,6 @@ type YouTubeResponse = {
 };
 
 const CHANNEL_HANDLE = 'ramzizrt';
-const CHANNEL_HANDLE_WITH_PREFIX = '@ramzizrt';
 const FALLBACK: YouTubeResponse = {
   subscriberCount: '--',
   latestVideo: {
@@ -47,13 +46,41 @@ function formatSubscriberCount(rawCount: string | undefined): string {
   return `${parseFloat(value.toFixed(1))}B`;
 }
 
+async function fetchChannelId(apiKey: string): Promise<string | null> {
+  const channelParams = new URLSearchParams({
+    part: 'id',
+    forHandle: CHANNEL_HANDLE,
+    key: apiKey
+  });
+
+  const response = await fetch(`https://www.googleapis.com/youtube/v3/channels?${channelParams.toString()}`, {
+    next: { revalidate: 3600 }
+  });
+
+  if (!response.ok) {
+    return null;
+  }
+
+  const data = (await response.json()) as {
+    items?: Array<{ id?: string }>;
+  };
+
+  return data.items?.[0]?.id || null;
+}
+
 async function fetchLatestVideo(apiKey: string): Promise<LatestVideo> {
+  const channelId = await fetchChannelId(apiKey);
+
+  if (!channelId) {
+    return FALLBACK.latestVideo;
+  }
+
   const searchParams = new URLSearchParams({
     part: 'snippet',
     type: 'video',
     order: 'date',
     maxResults: '1',
-    q: CHANNEL_HANDLE_WITH_PREFIX,
+    channelId,
     key: apiKey
   });
 
