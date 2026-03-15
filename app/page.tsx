@@ -24,11 +24,11 @@ const defaultData: YouTubeData = {
   latestVideoId: 'DWcJFNfaw9c',
   latestVideoTitle: 'Latest upload from Ramzi ZRT',
   latestVideoThumbnail: 'https://i.ytimg.com/vi/DWcJFNfaw9c/hqdefault.jpg',
-  channelUrl: 'https://youtube.com/@ramzizrt?si=RfcSPoz4agysI44Y'
+  channelUrl: 'https://youtube.com/@ramzizrt'
 };
 
 const socialLinks: SocialLink[] = [
-  { label: 'Watch on YouTube', href: 'https://youtube.com/@ramzizrt?si=RfcSPoz4agysI44Y', icon: 'youtube' },
+  { label: 'Watch on YouTube', href: 'https://youtube.com/@ramzizrt', icon: 'youtube' },
   { label: 'Instagram', href: 'https://www.instagram.com/ramzi.zrt/', icon: 'instagram' },
   { label: 'TikTok', href: 'https://www.tiktok.com/@ramzizrt', icon: 'tiktok' },
   { label: 'Discord', href: 'https://discord.gg/EyGmfqBP7d', icon: 'discord' },
@@ -131,7 +131,17 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
-    setThumbnailSrc(youtubeData.latestVideoThumbnail);
+    const trimmedThumbnail = youtubeData.latestVideoThumbnail?.trim();
+    if (trimmedThumbnail) {
+      setThumbnailSrc(trimmedThumbnail);
+      return;
+    }
+
+    const fallbackThumbnail = youtubeData.latestVideoId
+      ? `https://i.ytimg.com/vi/${youtubeData.latestVideoId}/hqdefault.jpg`
+      : defaultData.latestVideoThumbnail;
+
+    setThumbnailSrc(fallbackThumbnail);
   }, [youtubeData.latestVideoThumbnail, youtubeData.latestVideoId]);
 
   return (
@@ -230,7 +240,7 @@ export default function Home() {
           >
             <h2 className="heading-font mb-4 text-3xl uppercase">Latest Video</h2>
             <motion.a
-              href={`https://www.youtube.com/watch?v=${youtubeData.latestVideoId}`}
+              href={`https://www.youtube.com/watch?v=${youtubeData.latestVideoId || defaultData.latestVideoId}`}
               target="_blank"
               rel="noreferrer"
               whileHover={{ y: -4, scale: 1.01 }}
@@ -242,9 +252,17 @@ export default function Home() {
                   alt="Latest video"
                   className="w-full h-full object-cover"
                   onError={() => {
-                    const fallbackThumbnail = `https://i.ytimg.com/vi/${youtubeData.latestVideoId}/hqdefault.jpg`;
+                    const fallbackThumbnail = youtubeData.latestVideoId
+                      ? `https://i.ytimg.com/vi/${youtubeData.latestVideoId}/hqdefault.jpg`
+                      : defaultData.latestVideoThumbnail;
+
                     if (thumbnailSrc !== fallbackThumbnail) {
                       setThumbnailSrc(fallbackThumbnail);
+                      return;
+                    }
+
+                    if (thumbnailSrc !== defaultData.latestVideoThumbnail) {
+                      setThumbnailSrc(defaultData.latestVideoThumbnail);
                     }
                   }}
                 />

@@ -14,8 +14,8 @@ type ScrapedLatestVideo = {
   latestVideoThumbnail: string;
 };
 
-const CHANNEL_ID = 'UCkZ8ISvm1sH1Ny02DPzQoA';
-const CHANNEL_HANDLE_URL = 'https://youtube.com/@ramzizrt?si=RfcSPoz4agysI44Y';
+const CHANNEL_ID = 'UCKz8ISvm1sH1iNyo2DPzQoA';
+const CHANNEL_HANDLE_URL = 'https://youtube.com/@ramzizrt';
 const getChannelUrl = () => process.env.YOUTUBE_CHANNEL_URL || CHANNEL_HANDLE_URL;
 const CHANNEL_URL = getChannelUrl();
 
