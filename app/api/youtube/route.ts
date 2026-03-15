@@ -16,13 +16,14 @@ type ScrapedLatestVideo = {
 
 const CHANNEL_ID = 'UCkZ8ISvm1sH1Ny02DPzQoA';
 const getChannelUrl = (channelId: string) => `https://www.youtube.com/channel/${channelId}`;
+const getUploadsPlaylistId = (channelId: string) => `UU${channelId.slice(2)}`;
 const CHANNEL_URL = getChannelUrl(CHANNEL_ID);
 
 const FALLBACK: YouTubePayload = {
   subscriberCount: '--',
-  latestVideoId: 'DWcJFNfaw9c',
-  latestVideoTitle: 'Latest upload from Ramzi ZRT',
-  latestVideoThumbnail: 'https://i.ytimg.com/vi/DWcJFNfaw9c/hqdefault.jpg',
+  latestVideoId: '',
+  latestVideoTitle: '',
+  latestVideoThumbnail: '',
   channelUrl: CHANNEL_URL
 };
 
@@ -211,7 +212,8 @@ function decodeXmlEntities(value: string) {
 }
 
 async function scrapeLatestVideoFromFeed(channelId: string): Promise<ScrapedLatestVideo | null> {
-  const feedUrl = `https://www.youtube.com/feeds/videos.xml?channel_id=${channelId}`;
+  const uploadsPlaylistId = getUploadsPlaylistId(channelId);
+  const feedUrl = `https://www.youtube.com/feeds/videos.xml?playlist_id=${uploadsPlaylistId}`;
   const feedRes = await fetch(feedUrl, {
     next: { revalidate: 900 }
   });
@@ -238,7 +240,7 @@ async function scrapeLatestVideoFromFeed(channelId: string): Promise<ScrapedLate
 
   return {
     latestVideoId,
-    latestVideoTitle: decodeXmlEntities(titleMatch?.[1]?.trim() || FALLBACK.latestVideoTitle),
+    latestVideoTitle: decodeXmlEntities(titleMatch?.[1]?.trim() || ''),
     latestVideoThumbnail: `https://i.ytimg.com/vi/${latestVideoId}/hqdefault.jpg`
   };
 }
@@ -269,7 +271,7 @@ export async function GET() {
 
     return NextResponse.json({
       ...payload,
-      source: hasRssLatestVideo ? 'rss' : 'fallback'
+      source: hasRssLatestVideo ? 'uploads_rss' : 'fallback'
     });
   }
 
@@ -296,12 +298,11 @@ export async function GET() {
       subscriberCount: Number(channel.statistics?.subscriberCount || 0).toLocaleString(),
       latestVideoId: latestVideo?.latestVideoId || FALLBACK.latestVideoId,
       latestVideoTitle: latestVideo?.latestVideoTitle || FALLBACK.latestVideoTitle,
-      latestVideoThumbnail:
-        latestVideo?.latestVideoThumbnail || `https://i.ytimg.com/vi/${FALLBACK.latestVideoId}/hqdefault.jpg`,
+      latestVideoThumbnail: latestVideo?.latestVideoThumbnail || FALLBACK.latestVideoThumbnail,
       channelUrl: getChannelUrl(channelId)
     };
 
-    return NextResponse.json({ ...data, source: latestVideo ? 'rss' : 'fallback' });
+    return NextResponse.json({ ...data, source: latestVideo ? 'uploads_rss' : 'fallback' });
   } catch {
     return NextResponse.json({ ...FALLBACK, source: 'fallback' });
   }
