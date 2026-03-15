@@ -24,11 +24,11 @@ const defaultData: YouTubeData = {
   latestVideoId: 'DWcJFNfaw9c',
   latestVideoTitle: 'Latest upload from Ramzi ZRT',
   latestVideoThumbnail: 'https://i.ytimg.com/vi/DWcJFNfaw9c/hqdefault.jpg',
-  channelUrl: 'https://www.youtube.com/channel/UCkZ8ISvm1sH1Ny02DPzQoA'
+  channelUrl: 'https://youtube.com/@ramzizrt?si=RfcSPoz4agysI44Y'
 };
 
 const socialLinks: SocialLink[] = [
-  { label: 'Watch on YouTube', href: 'https://www.youtube.com/channel/UCkZ8ISvm1sH1Ny02DPzQoA', icon: 'youtube' },
+  { label: 'Watch on YouTube', href: 'https://youtube.com/@ramzizrt?si=RfcSPoz4agysI44Y', icon: 'youtube' },
   { label: 'Instagram', href: 'https://www.instagram.com/ramzi.zrt/', icon: 'instagram' },
   { label: 'TikTok', href: 'https://www.tiktok.com/@ramzizrt', icon: 'tiktok' },
   { label: 'Discord', href: 'https://discord.gg/EyGmfqBP7d', icon: 'discord' },
