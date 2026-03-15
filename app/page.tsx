@@ -94,6 +94,7 @@ function PlatformIcon({ icon }: { icon: SocialLink['icon'] }) {
 
 export default function Home() {
   const [youtubeData, setYoutubeData] = useState(defaultData);
+  const [thumbnailSrc, setThumbnailSrc] = useState(defaultData.latestVideoThumbnail);
   const [cursor, setCursor] = useState({ x: -200, y: -200 });
 
   const particles = useMemo(
@@ -128,6 +129,10 @@ export default function Home() {
 
     return () => window.removeEventListener('mousemove', onMove);
   }, []);
+
+  useEffect(() => {
+    setThumbnailSrc(youtubeData.latestVideoThumbnail);
+  }, [youtubeData.latestVideoThumbnail, youtubeData.latestVideoId]);
 
   return (
     <main className="relative z-10 mx-auto min-h-screen w-full max-w-[1100px] overflow-hidden px-5 pb-16 pt-8 sm:px-6 lg:pt-[60px]">
@@ -233,12 +238,18 @@ export default function Home() {
             >
               <div className="relative w-full aspect-video overflow-hidden rounded-xl">
                 <Image
-                  src={youtubeData.latestVideoThumbnail}
+                  src={thumbnailSrc}
                   alt={youtubeData.latestVideoTitle}
                   fill
                   unoptimized
                   sizes="(min-width: 1024px) 520px, (min-width: 768px) 80vw, 100vw"
                   className="object-cover"
+                  onError={() => {
+                    const fallbackThumbnail = `https://i.ytimg.com/vi/${youtubeData.latestVideoId}/hqdefault.jpg`;
+                    if (thumbnailSrc !== fallbackThumbnail) {
+                      setThumbnailSrc(fallbackThumbnail);
+                    }
+                  }}
                 />
               </div>
               <div className="border-t border-white/15 p-4">

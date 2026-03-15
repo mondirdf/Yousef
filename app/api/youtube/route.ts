@@ -239,8 +239,28 @@ async function scrapeLatestVideoFromFeed(channelId: string): Promise<ScrapedLate
   return {
     latestVideoId,
     latestVideoTitle: decodeXmlEntities(titleMatch?.[1]?.trim() || FALLBACK.latestVideoTitle),
-    latestVideoThumbnail: thumbnailMatch?.[1] || `https://i.ytimg.com/vi/${latestVideoId}/maxresdefault.jpg`
+    latestVideoThumbnail: thumbnailMatch?.[1] || `https://i.ytimg.com/vi/${latestVideoId}/hqdefault.jpg`
   };
+}
+
+function pickYouTubeThumbnail(
+  thumbnails: {
+    maxres?: { url?: string };
+    standard?: { url?: string };
+    high?: { url?: string };
+    medium?: { url?: string };
+    default?: { url?: string };
+  } | undefined,
+  videoId: string
+) {
+  return (
+    thumbnails?.maxres?.url ||
+    thumbnails?.standard?.url ||
+    thumbnails?.high?.url ||
+    thumbnails?.medium?.url ||
+    thumbnails?.default?.url ||
+    `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`
+  );
 }
 
 export async function GET() {
@@ -303,10 +323,7 @@ export async function GET() {
       subscriberCount: Number(channel.statistics?.subscriberCount || 0).toLocaleString(),
       latestVideoId: video.id?.videoId || FALLBACK.latestVideoId,
       latestVideoTitle: video.snippet?.title || FALLBACK.latestVideoTitle,
-      latestVideoThumbnail:
-        video.snippet?.thumbnails?.high?.url ||
-        video.snippet?.thumbnails?.medium?.url ||
-        FALLBACK.latestVideoThumbnail,
+      latestVideoThumbnail: pickYouTubeThumbnail(video.snippet?.thumbnails, video.id?.videoId || FALLBACK.latestVideoId),
       channelUrl: getChannelUrl(channelId)
     };
 
