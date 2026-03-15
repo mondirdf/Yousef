@@ -15,8 +15,9 @@ type ScrapedLatestVideo = {
 };
 
 const CHANNEL_ID = 'UCkZ8ISvm1sH1Ny02DPzQoA';
-const getChannelUrl = (channelId: string) => `https://www.youtube.com/channel/${channelId}`;
-const CHANNEL_URL = getChannelUrl(CHANNEL_ID);
+const CHANNEL_HANDLE_URL = 'https://youtube.com/@ramzizrt?si=RfcSPoz4agysI44Y';
+const getChannelUrl = () => process.env.YOUTUBE_CHANNEL_URL || CHANNEL_HANDLE_URL;
+const CHANNEL_URL = getChannelUrl();
 
 const FALLBACK: YouTubePayload = {
   subscriberCount: '--',
@@ -201,6 +202,38 @@ async function scrapeSubscriberCount() {
   return null;
 }
 
+function extractChannelIdFromHtml(html: string): string | null {
+  const directMatch = html.match(/"channelId"\s*:\s*"(UC[\w-]{20,})"/i)?.[1];
+  if (directMatch) {
+    return directMatch;
+  }
+
+  const canonicalMatch = html.match(/<link\s+rel="canonical"\s+href="https:\/\/www\.youtube\.com\/channel\/(UC[\w-]{20,})"/i)?.[1];
+  return canonicalMatch || null;
+}
+
+async function resolveChannelIdFromUrl(channelUrl: string, fallbackChannelId: string): Promise<string> {
+  try {
+    const pageRes = await fetch(channelUrl, {
+      headers: {
+        'user-agent':
+          'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36',
+        'accept-language': 'en-US,en;q=0.9'
+      },
+      next: { revalidate: 900 }
+    });
+
+    if (!pageRes.ok) {
+      return fallbackChannelId;
+    }
+
+    const html = await pageRes.text();
+    return extractChannelIdFromHtml(html) || fallbackChannelId;
+  } catch {
+    return fallbackChannelId;
+  }
+}
+
 function decodeXmlEntities(value: string) {
   return value
     .replace(/&amp;/g, '&')
@@ -238,10 +271,11 @@ async function scrapeLatestVideoFromFeed(channelId: string): Promise<ScrapedLate
 
 export async function GET() {
   const apiKey = process.env.YOUTUBE_API_KEY;
-  const channelId = process.env.YOUTUBE_CHANNEL_ID || CHANNEL_ID;
+  const channelIdFromEnv = process.env.YOUTUBE_CHANNEL_ID;
+  const channelId = channelIdFromEnv || (await resolveChannelIdFromUrl(CHANNEL_URL, CHANNEL_ID));
 
   if (!apiKey) {
-    const payload: YouTubePayload = { ...FALLBACK, channelUrl: getChannelUrl(channelId) };
+    const payload: YouTubePayload = { ...FALLBACK, channelUrl: getChannelUrl() };
     let hasRssLatestVideo = false;
 
     const [subscriberResult, latestVideoResult] = await Promise.allSettled([
@@ -290,7 +324,7 @@ export async function GET() {
       latestVideoId: latestVideo?.latestVideoId || FALLBACK.latestVideoId,
       latestVideoTitle: latestVideo?.latestVideoTitle || FALLBACK.latestVideoTitle,
       latestVideoThumbnail: latestVideo?.latestVideoThumbnail || FALLBACK.latestVideoThumbnail,
-      channelUrl: getChannelUrl(channelId)
+      channelUrl: getChannelUrl()
     };
 
     return NextResponse.json({ ...data, source: latestVideo ? 'rss' : 'fallback' });
