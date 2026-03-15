@@ -14,6 +14,13 @@ type YouTubeData = {
   };
 };
 
+type YouTubeApiPayload = {
+  latestVideoId: string;
+  latestVideoThumbnail: string;
+  latestVideoUrl: string;
+  latestVideoTitle: string;
+};
+
 type SocialLink = {
   label: string;
   href: string;
@@ -115,8 +122,15 @@ export default function Home() {
       try {
         const response = await fetch('/api/youtube');
         if (!response.ok) return;
-        const payload = (await response.json()) as YouTubeData;
-        setYoutubeData(payload);
+        const payload = (await response.json()) as YouTubeApiPayload;
+        setYoutubeData((current) => ({
+          ...current,
+          latestVideo: {
+            title: payload.latestVideoTitle?.trim() || defaultData.latestVideo.title,
+            thumbnail: payload.latestVideoThumbnail?.trim() || defaultData.latestVideo.thumbnail,
+            url: payload.latestVideoUrl?.trim() || defaultData.latestVideo.url
+          }
+        }));
       } catch {
         // fallback remains visible
       }
