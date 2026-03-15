@@ -14,7 +14,7 @@ type ScrapedLatestVideo = {
   latestVideoThumbnail: string;
 };
 
-const CHANNEL_ID = 'UCKz8ISvm1sH1iNyo2DPzQoA';
+const CHANNEL_ID = 'UCkZ8ISvm1sH1Ny02DPzQoA';
 const getChannelUrl = (channelId: string) => `https://www.youtube.com/channel/${channelId}`;
 const CHANNEL_URL = getChannelUrl(CHANNEL_ID);
 
@@ -22,7 +22,7 @@ const FALLBACK: YouTubePayload = {
   subscriberCount: '--',
   latestVideoId: 'DWcJFNfaw9c',
   latestVideoTitle: 'Latest upload from Ramzi ZRT',
-  latestVideoThumbnail: 'https://i.ytimg.com/vi/DWcJFNfaw9c/maxresdefault.jpg',
+  latestVideoThumbnail: 'https://i.ytimg.com/vi/DWcJFNfaw9c/hqdefault.jpg',
   channelUrl: CHANNEL_URL
 };
 
@@ -211,7 +211,8 @@ function decodeXmlEntities(value: string) {
 }
 
 async function scrapeLatestVideoFromFeed(channelId: string): Promise<ScrapedLatestVideo | null> {
-  const feedRes = await fetch(`https://www.youtube.com/feeds/videos.xml?channel_id=${channelId}`, {
+  const feedUrl = `https://www.youtube.com/feeds/videos.xml?channel_id=${channelId}`;
+  const feedRes = await fetch(feedUrl, {
     next: { revalidate: 900 }
   });
 
@@ -220,16 +221,15 @@ async function scrapeLatestVideoFromFeed(channelId: string): Promise<ScrapedLate
   }
 
   const xml = await feedRes.text();
-  const entryMatch = xml.match(/<entry>([\s\S]*?)<\/entry>/);
+  const entryMatch = xml.match(/<entry>([\s\S]*?)<\/entry>/i);
 
   if (!entryMatch?.[1]) {
     return null;
   }
 
   const entryXml = entryMatch[1];
-  const idMatch = entryXml.match(/<yt:videoId>([^<]+)<\/yt:videoId>/);
-  const titleMatch = entryXml.match(/<title>([^<]+)<\/title>/);
-  const thumbnailMatch = entryXml.match(/<media:thumbnail[^>]*url="([^"]+)"/);
+  const idMatch = entryXml.match(/<yt:videoId>([^<]+)<\/yt:videoId>/i);
+  const titleMatch = entryXml.match(/<title>([\s\S]*?)<\/title>/i);
 
   const latestVideoId = idMatch?.[1]?.trim();
   if (!latestVideoId) {
@@ -239,28 +239,8 @@ async function scrapeLatestVideoFromFeed(channelId: string): Promise<ScrapedLate
   return {
     latestVideoId,
     latestVideoTitle: decodeXmlEntities(titleMatch?.[1]?.trim() || FALLBACK.latestVideoTitle),
-    latestVideoThumbnail: thumbnailMatch?.[1] || `https://i.ytimg.com/vi/${latestVideoId}/hqdefault.jpg`
+    latestVideoThumbnail: `https://i.ytimg.com/vi/${latestVideoId}/hqdefault.jpg`
   };
-}
-
-function pickYouTubeThumbnail(
-  thumbnails: {
-    maxres?: { url?: string };
-    standard?: { url?: string };
-    high?: { url?: string };
-    medium?: { url?: string };
-    default?: { url?: string };
-  } | undefined,
-  videoId: string
-) {
-  return (
-    thumbnails?.maxres?.url ||
-    thumbnails?.standard?.url ||
-    thumbnails?.high?.url ||
-    thumbnails?.medium?.url ||
-    thumbnails?.default?.url ||
-    `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`
-  );
 }
 
 export async function GET() {
@@ -269,7 +249,7 @@ export async function GET() {
 
   if (!apiKey) {
     const payload: YouTubePayload = { ...FALLBACK, channelUrl: getChannelUrl(channelId) };
-    let hasRealData = false;
+    let hasRssLatestVideo = false;
 
     const [subscriberResult, latestVideoResult] = await Promise.allSettled([
       scrapeSubscriberCount(),
@@ -278,19 +258,18 @@ export async function GET() {
 
     if (subscriberResult.status === 'fulfilled' && subscriberResult.value) {
       payload.subscriberCount = subscriberResult.value;
-      hasRealData = true;
     }
 
     if (latestVideoResult.status === 'fulfilled' && latestVideoResult.value) {
       payload.latestVideoId = latestVideoResult.value.latestVideoId;
       payload.latestVideoTitle = latestVideoResult.value.latestVideoTitle;
       payload.latestVideoThumbnail = latestVideoResult.value.latestVideoThumbnail;
-      hasRealData = true;
+      hasRssLatestVideo = true;
     }
 
     return NextResponse.json({
       ...payload,
-      source: hasRealData ? 'youtube-scrape-rss' : 'fallback'
+      source: hasRssLatestVideo ? 'rss' : 'fallback'
     });
   }
 
@@ -300,34 +279,29 @@ export async function GET() {
       { next: { revalidate: 900 } }
     );
 
-    const latestVideoRes = await fetch(
-      `https://www.googleapis.com/youtube/v3/search?part=snippet&channelId=${channelId}&maxResults=1&order=date&type=video&key=${apiKey}`,
-      { next: { revalidate: 900 } }
-    );
-
-    if (!channelRes.ok || !latestVideoRes.ok) {
+    if (!channelRes.ok) {
       return NextResponse.json({ ...FALLBACK, source: 'fallback' });
     }
 
     const channelData = await channelRes.json();
-    const latestVideoData = await latestVideoRes.json();
-
     const channel = channelData?.items?.[0];
-    const video = latestVideoData?.items?.[0];
 
-    if (!channel || !video) {
+    if (!channel) {
       return NextResponse.json({ ...FALLBACK, source: 'fallback' });
     }
 
+    const latestVideo = await scrapeLatestVideoFromFeed(channelId);
+
     const data: YouTubePayload = {
       subscriberCount: Number(channel.statistics?.subscriberCount || 0).toLocaleString(),
-      latestVideoId: video.id?.videoId || FALLBACK.latestVideoId,
-      latestVideoTitle: video.snippet?.title || FALLBACK.latestVideoTitle,
-      latestVideoThumbnail: pickYouTubeThumbnail(video.snippet?.thumbnails, video.id?.videoId || FALLBACK.latestVideoId),
+      latestVideoId: latestVideo?.latestVideoId || FALLBACK.latestVideoId,
+      latestVideoTitle: latestVideo?.latestVideoTitle || FALLBACK.latestVideoTitle,
+      latestVideoThumbnail:
+        latestVideo?.latestVideoThumbnail || `https://i.ytimg.com/vi/${FALLBACK.latestVideoId}/hqdefault.jpg`,
       channelUrl: getChannelUrl(channelId)
     };
 
-    return NextResponse.json({ ...data, source: 'youtube-api' });
+    return NextResponse.json({ ...data, source: latestVideo ? 'rss' : 'fallback' });
   } catch {
     return NextResponse.json({ ...FALLBACK, source: 'fallback' });
   }

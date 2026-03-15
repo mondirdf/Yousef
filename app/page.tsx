@@ -23,12 +23,12 @@ const defaultData: YouTubeData = {
   subscriberCount: '39.7 k',
   latestVideoId: 'DWcJFNfaw9c',
   latestVideoTitle: 'Latest upload from Ramzi ZRT',
-  latestVideoThumbnail: 'https://i.ytimg.com/vi/DWcJFNfaw9c/maxresdefault.jpg',
-  channelUrl: 'https://www.youtube.com/channel/UCKz8ISvm1sH1iNyo2DPzQoA'
+  latestVideoThumbnail: 'https://i.ytimg.com/vi/DWcJFNfaw9c/hqdefault.jpg',
+  channelUrl: 'https://www.youtube.com/channel/UCkZ8ISvm1sH1Ny02DPzQoA'
 };
 
 const socialLinks: SocialLink[] = [
-  { label: 'Watch on YouTube', href: 'https://www.youtube.com/channel/UCKz8ISvm1sH1iNyo2DPzQoA', icon: 'youtube' },
+  { label: 'Watch on YouTube', href: 'https://www.youtube.com/channel/UCkZ8ISvm1sH1Ny02DPzQoA', icon: 'youtube' },
   { label: 'Instagram', href: 'https://www.instagram.com/ramzi.zrt/', icon: 'instagram' },
   { label: 'TikTok', href: 'https://www.tiktok.com/@ramzizrt', icon: 'tiktok' },
   { label: 'Discord', href: 'https://discord.gg/EyGmfqBP7d', icon: 'discord' },
@@ -114,7 +114,7 @@ export default function Home() {
         const response = await fetch('/api/youtube');
         if (!response.ok) return;
         const payload = (await response.json()) as YouTubeData;
-        setYoutubeData({ ...payload, subscriberCount: '39.7 k' });
+        setYoutubeData(payload);
       } catch {
         // fallback remains visible
       }
@@ -237,13 +237,10 @@ export default function Home() {
               className="glass-card soft-glow block overflow-hidden"
             >
               <div className="relative w-full aspect-video overflow-hidden rounded-xl">
-                <Image
+                <img
                   src={thumbnailSrc}
-                  alt={youtubeData.latestVideoTitle}
-                  fill
-                  unoptimized
-                  sizes="(min-width: 1024px) 520px, (min-width: 768px) 80vw, 100vw"
-                  className="object-cover"
+                  alt="Latest video"
+                  className="w-full h-full object-cover"
                   onError={() => {
                     const fallbackThumbnail = `https://i.ytimg.com/vi/${youtubeData.latestVideoId}/hqdefault.jpg`;
                     if (thumbnailSrc !== fallbackThumbnail) {
