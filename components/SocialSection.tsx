@@ -5,7 +5,7 @@ import { Instagram, Music2, Youtube } from 'lucide-react';
 
 const links = [
   { name: 'YouTube', icon: Youtube, href: 'https://www.youtube.com/@Redblick' },
-  { name: 'Instagram', icon: Instagram, href: 'https://www.instagram.com/yousef_redblick' },
+  { name: 'Instagram', icon: Instagram, href: 'https://www.instagram.com/yousef_rdbk?igsh=aTk1MjlmMmg4bmg=' },
   { name: 'TikTok', icon: Music2, href: 'https://www.tiktok.com/@yousef_redblick' }
 ];
 

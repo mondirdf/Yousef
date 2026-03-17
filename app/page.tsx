@@ -39,7 +39,7 @@ const defaultData: YouTubeData = {
 
 const socialLinks: SocialLink[] = [
   { label: 'Watch on YouTube', href: 'https://www.youtube.com/@Redblick', icon: 'youtube' },
-  { label: 'Instagram', href: 'https://www.instagram.com/yousef_redblick', icon: 'instagram' },
+  { label: 'Instagram', href: 'https://www.instagram.com/yousef_rdbk?igsh=aTk1MjlmMmg4bmg=', icon: 'instagram' },
   { label: 'TikTok', href: 'https://www.tiktok.com/@yousef_redblick', icon: 'tiktok' }
 ];
 
