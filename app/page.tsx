@@ -1,6 +1,6 @@
 'use client';
 
-import { Instagram, Mail, Youtube } from 'lucide-react';
+import { Instagram, Youtube } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useEffect, useMemo, useState } from 'react';
 import Image from 'next/image';
@@ -25,42 +25,39 @@ type YouTubeApiPayload = {
 type SocialLink = {
   label: string;
   href: string;
-  icon: 'youtube' | 'instagram' | 'tiktok' | 'discord' | 'kick' | 'email';
+  icon: 'youtube' | 'instagram' | 'tiktok';
 };
 
 const defaultData: YouTubeData = {
-  subscriberCount: '39.6K',
+  subscriberCount: '10.3K',
   latestVideo: {
-    title: 'Latest upload from Ramzi ZRT',
+    title: 'Latest upload from Youcef RDBK',
     thumbnail: 'https://i.ytimg.com/vi/DWcJFNfaw9c/hqdefault.jpg',
     url: 'https://youtube.com/watch?v=DWcJFNfaw9c'
   }
 };
 
 const socialLinks: SocialLink[] = [
-  { label: 'Watch on YouTube', href: 'https://youtube.com/@ramzizrt', icon: 'youtube' },
-  { label: 'Instagram', href: 'https://www.instagram.com/ramzi.zrt/', icon: 'instagram' },
-  { label: 'TikTok', href: 'https://www.tiktok.com/@ramzizrt', icon: 'tiktok' },
-  { label: 'Discord', href: 'https://discord.gg/EyGmfqBP7d', icon: 'discord' },
-  { label: 'Kick', href: 'https://kick.com/ramzi-zrt', icon: 'kick' },
-  { label: 'Email', href: 'mailto:ramzizaratpro@gmail.com', icon: 'email' }
+  { label: 'Watch on YouTube', href: 'https://www.youtube.com/@Redblick', icon: 'youtube' },
+  { label: 'Instagram', href: 'https://www.instagram.com/yousef_redblick', icon: 'instagram' },
+  { label: 'TikTok', href: 'https://www.tiktok.com/@yousef_redblick', icon: 'tiktok' }
 ];
 
 const whatIDoContent = [
   {
-    icon: '🎥',
-    title: 'YouTube Content',
-    description: 'Entertaining videos, challenges and real-life stories.'
+    icon: '🎮',
+    title: 'Gaming Content',
+    description: 'Gameplay videos, reviews and challenges.'
   },
   {
-    icon: '📸',
-    title: 'Photography',
-    description: 'Capturing cinematic moments and visual storytelling.'
+    icon: '🕹️',
+    title: 'Game Reviews',
+    description: 'Honest reviews of games and setups.'
   },
   {
-    icon: '🎬',
-    title: 'Video Editing',
-    description: 'Creative edits and storytelling for social media.'
+    icon: '📡',
+    title: 'Streaming & Community',
+    description: 'Live streams and interaction with the audience.'
   }
 ];
 
@@ -72,29 +69,11 @@ const fadeUp = {
 function PlatformIcon({ icon }: { icon: SocialLink['icon'] }) {
   if (icon === 'youtube') return <Youtube className="h-5 w-5" aria-hidden="true" />;
   if (icon === 'instagram') return <Instagram className="h-5 w-5" aria-hidden="true" />;
-  if (icon === 'email') return <Mail className="h-5 w-5" aria-hidden="true" />;
 
   if (icon === 'tiktok') {
     return (
       <svg viewBox="0 0 24 24" className="h-5 w-5" fill="currentColor" aria-hidden="true">
         <path d="M19.589 6.686a4.793 4.793 0 0 1-3.77-4.231h-3.4v13.715a2.9 2.9 0 1 1-2.9-2.9c.233 0 .46.028.678.08V9.89a6.35 6.35 0 1 0 6.222 6.35V9.228a8.165 8.165 0 0 0 4.784 1.525V7.4a4.83 4.83 0 0 1-1.614-.714Z" />
-      </svg>
-    );
-  }
-
-  if (icon === 'discord') {
-    return (
-      <svg viewBox="0 0 24 24" className="h-5 w-5" fill="currentColor" aria-hidden="true">
-        <path d="M20.317 4.369A19.791 19.791 0 0 0 15.885 3c-.191.328-.403.77-.55 1.116a18.264 18.264 0 0 0-5.35 0A12.64 12.64 0 0 0 9.435 3a19.736 19.736 0 0 0-4.433 1.37C2.2 8.602 1.44 12.728 1.8 16.798a19.9 19.9 0 0 0 5.42 2.759c.438-.604.83-1.24 1.17-1.904-.643-.242-1.257-.54-1.84-.885.154-.113.305-.23.451-.349 3.55 1.668 7.404 1.668 10.912 0 .147.12.298.236.451.35-.582.344-1.197.642-1.841.884.341.663.732 1.3 1.171 1.903a19.857 19.857 0 0 0 5.421-2.758c.423-4.717-.722-8.805-3.2-12.43ZM8.02 14.315c-1.065 0-1.94-.975-1.94-2.17 0-1.196.858-2.17 1.94-2.17 1.09 0 1.958.984 1.94 2.17 0 1.195-.858 2.17-1.94 2.17Zm7.96 0c-1.066 0-1.94-.975-1.94-2.17 0-1.196.857-2.17 1.94-2.17 1.09 0 1.957.984 1.94 2.17 0 1.195-.85 2.17-1.94 2.17Z" />
-      </svg>
-    );
-  }
-
-  if (icon === 'kick') {
-    return (
-      <svg viewBox="0 0 24 24" className="h-5 w-5" fill="currentColor" aria-hidden="true">
-        <path d="M3 3h8v5H9V6H5v12h4v-2h2v5H3V3Z" />
-        <path d="M12 3h9v5.5A3.5 3.5 0 0 1 17.5 12H16l5 9h-6l-4-8h1.5A2.5 2.5 0 0 0 15 10.5V8h-3V3Z" />
       </svg>
     );
   }
@@ -201,18 +180,18 @@ export default function Home() {
           <div className="mx-auto h-[118px] w-[118px] rounded-full border border-white/20 p-[6px] [animation:ringPulse_3s_ease-in-out_infinite]">
             <div className="relative h-full w-full rounded-full border border-white/15 p-[4px] shadow-[0_0_28px_rgba(255,255,255,0.2)]">
               <Image
-                src="/ramzi-logo.svg"
-                alt="Ramzi ZRT profile"
+                src="/yousef.svg"
+                alt="Youcef RDBK profile"
                 fill
                 sizes="108px"
                 className="rounded-full object-cover"
               />
             </div>
           </div>
-          <h1 className="heading-font mt-5 text-5xl uppercase leading-none">RAMZI ZRT</h1>
-          <p className="mt-2 text-sm uppercase tracking-[0.18em] text-[#BFBFBF]">Content Creator</p>
+          <h1 className="heading-font mt-5 text-5xl uppercase leading-none">YOUCEF RDBK</h1>
+          <p className="mt-2 text-sm uppercase tracking-[0.18em] text-[#BFBFBF]">Gaming Content Creator 🎮</p>
           <p className="mt-4 text-sm leading-relaxed text-[#BFBFBF]">
-            Creating cinematic YouTube videos, challenges and real-life stories.
+            Gaming content creator & streamer. I review and play games, share setups and insights.
           </p>
           <div className="mx-auto mt-5 w-fit rounded-full border border-white/20 bg-white/5 px-4 py-2 text-sm shadow-[0_0_20px_rgba(255,255,255,0.1)]">
             Subscribers: <span className="font-semibold">{youtubeData.subscriberCount}</span>
@@ -332,7 +311,7 @@ export default function Home() {
       >
         <p className="heading-font text-3xl uppercase leading-tight">Join the community on YouTube.</p>
         <motion.a
-          href="https://youtube.com/@ramzizrt"
+          href="https://www.youtube.com/@Redblick"
           target="_blank"
           rel="noreferrer"
           whileHover={{ scale: 1.04 }}

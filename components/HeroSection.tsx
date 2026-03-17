@@ -20,10 +20,10 @@ export default function HeroSection() {
         transition={{ duration: 1.1, ease: 'easeOut' }}
         className="section-shell relative z-10 text-center"
       >
-        <p className="section-label">Ramzi ZRT • Creator World</p>
-        <h1 className="heading-font text-7xl leading-[0.9] sm:text-8xl md:text-9xl">RAMZI ZRT</h1>
+        <p className="section-label">Youcef RDBK • Creator World</p>
+        <h1 className="heading-font text-7xl leading-[0.9] sm:text-8xl md:text-9xl">YOUCEF RDBK</h1>
 
-        <p className="mt-5 text-sm uppercase tracking-[0.3em] text-[#BFBFBF] md:text-base">Content Creator</p>
+        <p className="mt-5 text-sm uppercase tracking-[0.3em] text-[#BFBFBF] md:text-base">Gaming Content Creator 🎮</p>
 
         <p
           dir="rtl"
@@ -33,11 +33,11 @@ export default function HeroSection() {
         </p>
 
         <p className="mt-6 text-sm uppercase tracking-[0.3em] text-[#BFBFBF] md:text-base">
-          Street Challenges • Boxing • Cinematic Storytelling
+          Gaming • Reviews • Live Streams
         </p>
 
         <p className="mx-auto mt-6 max-w-2xl text-sm leading-relaxed text-[#BFBFBF] md:text-base">
-          Welcome to my creator world: raw moments, hard training, and stories filmed like short movies.
+          Gaming content creator & streamer. I review and play games, share setups and insights.
         </p>
 
         <div className="mt-10 flex flex-wrap items-center justify-center gap-4">

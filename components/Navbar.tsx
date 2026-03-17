@@ -41,7 +41,7 @@ export default function Navbar() {
       >
         <div className="section-shell flex h-16 items-center justify-between">
           <a href="#home" className="heading-font text-2xl text-white">
-            RAMZI ZRT
+            YOUCEF RDBK
           </a>
 
           <div className="hidden items-center gap-8 text-xs uppercase tracking-[0.22em] text-[#BFBFBF] md:flex">

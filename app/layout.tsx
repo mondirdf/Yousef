@@ -3,27 +3,27 @@ import { Analytics } from '@vercel/analytics/react';
 import './globals.css';
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://ramzi.zrt'),
-  title: 'Ramzi ZRT | Creator Links',
+  metadataBase: new URL('https://yousef-rdbk.vercel.app'),
+  title: 'Youcef RDBK | Creator Links',
   description:
-    'Premium link-in-bio page for Ramzi ZRT with social links, latest YouTube video, featured content, and subscribe call-to-action.',
+    'Premium link-in-bio page for Youcef RDBK with social links, latest YouTube video, featured content, and subscribe call-to-action.',
   openGraph: {
-    title: 'Ramzi ZRT | Creator Links',
+    title: 'Youcef RDBK | Creator Links',
     description:
-      'Premium link-in-bio page for Ramzi ZRT with social links, latest YouTube video, featured content, and subscribe call-to-action.',
-    images: [{ url: '/og-image.svg', type: 'image/svg+xml', width: 1200, height: 630, alt: 'Ramzi ZRT OG Image' }]
+      'Premium link-in-bio page for Youcef RDBK with social links, latest YouTube video, featured content, and subscribe call-to-action.',
+    images: [{ url: '/og-image.svg', type: 'image/svg+xml', width: 1200, height: 630, alt: 'Youcef RDBK OG Image' }]
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Ramzi ZRT | Creator Links',
+    title: 'Youcef RDBK | Creator Links',
     description:
-      'Premium link-in-bio page for Ramzi ZRT with social links, latest YouTube video, featured content, and subscribe call-to-action.',
+      'Premium link-in-bio page for Youcef RDBK with social links, latest YouTube video, featured content, and subscribe call-to-action.',
     images: ['/og-image.svg']
   },
   icons: {
-    icon: '/ramzi-logo.svg',
-    shortcut: '/ramzi-logo.svg',
-    apple: '/ramzi-logo.svg'
+    icon: '/yousef.svg',
+    shortcut: '/yousef.svg',
+    apple: '/yousef.svg'
   }
 };
 
