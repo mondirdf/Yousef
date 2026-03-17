@@ -31,6 +31,25 @@ async function fetchText(url: string): Promise<string | null> {
   return response.text();
 }
 
+function extractLatestVideoFromFeed(feedXml: string): { videoId: string; title: string } | null {
+  const entryMatch = feedXml.match(/<entry>[\s\S]*?<\/entry>/i);
+  if (!entryMatch) {
+    return null;
+  }
+
+  const videoIdMatch = entryMatch[0].match(/<yt:videoId>([^<]+)<\/yt:videoId>/i);
+  if (!videoIdMatch?.[1]) {
+    return null;
+  }
+
+  const titleMatch = entryMatch[0].match(/<title>([^<]+)<\/title>/i);
+
+  return {
+    videoId: videoIdMatch[1].trim(),
+    title: titleMatch?.[1]?.trim() || FALLBACK.latestVideoTitle
+  };
+}
+
 function extractChannelId(channelHtml: string): string | null {
   const canonicalMatch = channelHtml.match(
     /<link\s+rel=["']canonical["']\s+href=["']https:\/\/www\.youtube\.com\/channel\/([^"']+)["']/i
@@ -76,13 +95,13 @@ function extractSubscribers(channelHtml: string): string {
   return FALLBACK_SUBSCRIBERS;
 }
 
-function buildPayload(videoId: string, subscribers: string): YouTubeRssResponse {
+function buildPayload(videoId: string, subscribers: string, title: string): YouTubeRssResponse {
   return {
     subscribers,
     latestVideoId: videoId,
     latestVideoThumbnail: `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`,
     latestVideoUrl: `https://youtube.com/watch?v=${videoId}`,
-    latestVideoTitle: 'Latest upload from Youcef RDBK'
+    latestVideoTitle: title
   };
 }
 
@@ -103,7 +122,23 @@ export async function GET() {
       });
     }
 
-    return NextResponse.json(buildPayload(FALLBACK_VIDEO_ID, subscribers));
+    const feedXml = await fetchText(`https://www.youtube.com/feeds/videos.xml?channel_id=${channelId}`);
+    if (!feedXml) {
+      return NextResponse.json({
+        ...FALLBACK,
+        subscribers
+      });
+    }
+
+    const latestVideo = extractLatestVideoFromFeed(feedXml);
+    if (!latestVideo) {
+      return NextResponse.json({
+        ...FALLBACK,
+        subscribers
+      });
+    }
+
+    return NextResponse.json(buildPayload(latestVideo.videoId, subscribers, latestVideo.title));
   } catch {
     return NextResponse.json(FALLBACK);
   }
