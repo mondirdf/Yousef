@@ -20,6 +20,10 @@ export default function HeroSection() {
         transition={{ duration: 1.1, ease: 'easeOut' }}
         className="section-shell relative z-10 text-center"
       >
+        <div className="mx-auto mb-6 h-28 w-28 overflow-hidden rounded-full shadow-[0_0_20px_rgba(255,255,255,0.2)]">
+          <img src="/yousef.svg" alt="Youcef RDBK" className="block h-full w-full object-cover" />
+        </div>
+
         <p className="section-label">Youcef RDBK • Creator World</p>
         <h1 className="heading-font text-7xl leading-[0.9] sm:text-8xl md:text-9xl">YOUCEF RDBK</h1>
 
